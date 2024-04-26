@@ -1,3 +1,5 @@
 from assistant import assistant
 
-assistant("Is chocolate on sale?")
+user = "Is chocolate on sale?"
+
+assistant(user)
