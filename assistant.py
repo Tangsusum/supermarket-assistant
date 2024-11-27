@@ -88,5 +88,7 @@ def assistant(question):
         | StrOutputParser()
     )
 
-    for chunk in rag_chain.stream(question):
-        print(chunk, end="", flush=True)
+    # for chunk in rag_chain.stream(question):
+    #     print(chunk, end="", flush=True)
+
+    return rag_chain.invoke(question)

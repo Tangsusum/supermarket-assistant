@@ -11,7 +11,7 @@ class SupermarketScraper:
         self.vectordb = vectordb
         self.supermarket = supermarket
         self.url = url
-        self.filename = f'{self.supermarket}.txt'
+        self.filename = f'/tmp/{self.supermarket}.txt'
         self.metadata = {"supermarket": self.supermarket}
 
     def scrap(self):
@@ -95,14 +95,29 @@ class SupermarketScraper:
         return None
     
     def get_sale_id_coles(self):
-        loader = AsyncChromiumLoader(["https://www.coles.com.au/catalogues"])
-        docs = loader.load()
-        for doc in docs:
-            pattern = r'saleId=(\d{5})'
-            match = re.search(pattern, doc.page_content)
-            if match:
-                print('✅ Got Coles sale id')
-                return match.group(1)
+        url = "https://embed.salefinder.com.au/catalogues/view/148"
+        headers = {
+            'User-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.80 Safari/537.36'
+        }
+
+        session = requests.session()
+        response = session.get(url, headers=headers)
+        pattern = r'saleId=(\d{5})'
+        match = re.search(pattern, response.text)
+        if match:
+            print('✅ Got Coles sale id')
+            return match.group(1)
+
+        # loader = AsyncChromiumLoader(["https://www.coles.com.au/catalogues"])
+        # docs = loader.load()
+        # print(docs)
+        # for doc in docs:
+        #     print(doc.page_content)
+        #     
+        #     match = re.search(pattern, doc.page_content)
+        #     if match:
+        #         print('✅ Got Coles sale id')
+        #         return match.group(1)
             
         print('❌ Failed to get Coles sale id')
         return None
